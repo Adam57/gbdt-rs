@@ -52,6 +52,12 @@ def convert(input_model, objective, output_file):
 
     for tree in data:
         dfs_rewrite_split(tree)
+    
+    os.remove(tmp_file)
+
+    of = open(tmp_file, "w")
+    json.dump(data, of)
+    of.close()
 
     # add base score to json file
     try:
