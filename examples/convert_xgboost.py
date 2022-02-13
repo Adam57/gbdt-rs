@@ -6,10 +6,20 @@ import sys
 import xgboost as xgb
 import os
 import struct
+import json
 from ctypes import cdll
 from ctypes import c_float, c_uint, c_char_p, c_bool
 
 LIB_PATH = "./libgbdt.so"
+
+def dfs_rewrite_split(tree_dict):
+    if 'split' in tree_dict:
+        old_val = tree_dict['split']
+        tree_dict['split'] = int(old_val[1:])
+    
+    if 'children' in tree_dict:
+        for child in tree_dict['children']:
+            dfs_rewrite_split(child)
 
 def convert(input_model, objective, output_file):
     model = xgb.Booster()
@@ -35,6 +45,13 @@ def convert(input_model, objective, output_file):
 
     # dump json
     model.dump_model(tmp_file, dump_format="json")
+    
+    f = open(tmp_file)
+    data = json.load(f)
+    f.close()
+
+    for tree in data:
+        dfs_rewrite_split(tree)
 
     # add base score to json file
     try:
