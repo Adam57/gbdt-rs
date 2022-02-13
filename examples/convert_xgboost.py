@@ -46,18 +46,19 @@ def convert(input_model, objective, output_file):
     # dump json
     model.dump_model(tmp_file, dump_format="json")
     
-    f = open(tmp_file)
-    data = json.load(f)
-    f.close()
+    # The following is for xgboost=1.5.2, but is not needed when xgboost=0.81
+    # f = open(tmp_file)
+    # data = json.load(f)
+    # f.close()
 
-    for tree in data:
-        dfs_rewrite_split(tree)
+    # for tree in data:
+    #     dfs_rewrite_split(tree)
     
-    os.remove(tmp_file)
+    # os.remove(tmp_file)
 
-    of = open(tmp_file, "w")
-    json.dump(data, of)
-    of.close()
+    # of = open(tmp_file, "w")
+    # json.dump(data, of)
+    # of.close()
 
     # add base score to json file
     try:
